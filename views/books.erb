@@ -1,0 +1,15 @@
+<h1>All books</h1>
+
+<% @books.each do |book| %>
+  <p><a href="/books/<%= book.id %>"><%= book.title %></a></p>
+<% end %>
+
+<form action="/books" method="post">
+   <label for="title">Add a title</label>
+   <input id="title" name="title" type="text">
+
+   <label for="name">Who is the author?</label>
+   <input id="name" name="name" type="text">
+
+   <button type="submit">Submit</button>
+ </form>
