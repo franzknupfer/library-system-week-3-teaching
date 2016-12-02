@@ -1,14 +1,13 @@
 class Author
-  attr_reader :name, :book_id, :id
+  attr_reader :name, :id
 
   define_method(:initialize) do |attributes|
     @name = attributes.fetch(:name)
     @id = attributes.fetch(:id)
-    @book_id = attributes.fetch(:book_id)
   end
 
   define_method(:==) do |other_author|
-    (self.name == (other_author.name))&&(self.book_id == (other_author.book_id))
+    (self.name == (other_author.name))
   end
 
   define_singleton_method(:all) do
@@ -17,14 +16,13 @@ class Author
     all_authors.each do |author|
       name = author.fetch("name")
       id = author.fetch("id").to_i
-      book_id = author.fetch("book_id").to_i
-      authors.push(Author.new(:name => name, :id => id, :book_id => book_id))
+      authors.push(Author.new(:name => name, :id => id))
     end
     authors
   end
 
   define_method(:save) do
-    result = DB.exec("INSERT INTO authors (name, book_id) VALUES ('#{ self.name }', #{ self.book_id }) RETURNING id;")
+    result = DB.exec("INSERT INTO authors (name) VALUES ('#{ self.name }') RETURNING id;")
     @id = result.first.fetch("id").to_i
   end
 
@@ -40,26 +38,28 @@ class Author
 
   define_method(:update) do |attributes|
     @name = attributes.fetch(:name, @name)
-    @book_id = attributes.fetch(:book_id, @book_id)
-    @book_ids = attributes.fetch(:book_ids, [])
-    @id = self.id
-    DB.exec("UPDATE authors SET name = '#{@name}', book_id = #{@book_id}, book_ids = #{@book_ids} WHERE id = #{@id};")
+    DB.exec("UPDATE authors SET name = '#{@name}' WHERE id = #{self.id};")
+
+    attributes.fetch(:book_ids, []).each do |book_id|
+      DB.exec("INSERT INTO books_authors (author_id, book_id) VALUES (#{self.id}, #{book_id});")
+    end
   end
 
   define_method(:delete) do
+    DB.exec("DELETE from books_authors WHERE author_id = #{self.id};")
     DB.exec("DELETE from authors WHERE id = #{self.id};")
   end
 
   define_method(:books) do
-    books = DB.exec("SELECT * FROM books WHERE author_id = #{ self.id };")
-    author_books = []
-    books.each do |book|
-      title = book.fetch("title")
-      id = book.fetch("id").to_i
-      author_id = book.fetch("author_id").to_i
-      author_books.push(Book.new(:title => title, :id => id, :author_id => author_id))
+    book_authors = []
+    results = DB.exec("SELECT book_id FROM books_authors WHERE author_id = #{ self.id };")
+    results.each do |result|
+      book_id = result.fetch("book_id").to_i
+      book = DB.exec("SELECT * FROM books WHERE id = #{book_id};")
+      title = book.first.fetch("title")
+      book_authors.push(Book.new(:title => title, :id => book_id))
     end
-    author_books
+    book_authors
   end
 
 end

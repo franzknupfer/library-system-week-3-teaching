@@ -1,8 +1,22 @@
-<h1>All books</h1>
+<button type="success" id="authors">Toggle authors</button>
 
-<% @books.each do |book| %>
-  <p><a href="/books/<%= book.id %>"><%= book.title %></a></p>
-<% end %>
+<button type="success" id="books">Toggle books</button>
+
+<div class="books">
+  <h1>All books</h1>
+
+  <% @books.each do |book| %>
+    <p><a href="/books/<%= book.id %>"><%= book.title %></a></p>
+  <% end %>
+</div>
+
+<div class="authors">
+  <h1>All authors</h1>
+
+  <% @authors.each do |author| %>
+    <p><a href="/authors/<%= author.id %>"><%= author.name %></a></p>
+  <% end %>
+</div>
 
 <form action="/books" method="post">
    <label for="title">Add a title</label>
