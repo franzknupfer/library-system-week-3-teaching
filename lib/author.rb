@@ -62,4 +62,30 @@ class Author
     book_authors
   end
 
+  define_method(:duplicates) do
+    results = []
+    author_name = ""
+    Author.all.each do |author|
+      if (self.name == author.name)&&(self.id != author.id)
+        results.push([author.name, author.id])
+      end
+    end
+    results
+  end
+
+  define_method(:merge) do |author_to_merge|
+    book_ids = []
+    results = DB.exec("SELECT * FROM books_authors WHERE author_id = #{author_to_merge.id};")
+    results.each do |results|
+      book_ids.push(results.fetch("book_id").to_i)
+    end
+    book_ids.each do |book_id|
+      DB.exec("INSERT INTO books_authors (author_id, book_id) VALUES (#{self.id}, #{book_id});")
+    end
+    author_to_merge.delete
+  end
+
+  define_singleton_method(:clear) do
+    DB.exec("DELETE FROM authors *;")
+  end
 end

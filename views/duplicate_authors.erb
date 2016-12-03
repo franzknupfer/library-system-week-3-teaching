@@ -1,0 +1,11 @@
+<h1>Duplicates of <%= @author.name %></h1>
+
+<% @duplicates.each do |duplicate| %>
+  <p><%= duplicate %></p>
+<% end %>
+
+<form action="/authors/<%= @author.id %>/duplicates" method="post">
+  <label for="merge_id">Choose an ID to merge two records.</label>
+     <input id="merge_id" name="merge_id" type="number">
+     <button type="submit">Merge</button>
+   </form>

@@ -1,11 +1,12 @@
 require 'pry'
 
 class Book
-  attr_reader :title, :id
+  attr_reader :title, :id, :due_date
 
   define_method(:initialize) do |attributes|
     @title = attributes.fetch(:title)
     @id = attributes.fetch(:id)
+    # @due_date = attributes.fetch(:due_date)
   end
 
   define_singleton_method(:all) do
@@ -66,5 +67,8 @@ class Book
     book_authors
   end
 
+  define_singleton_method(:clear) do
+    DB.exec("DELETE FROM books *;")
+  end
 
 end

@@ -1,14 +1,4 @@
-require("rspec")
-require("pg")
-require("book")
-require("author")
-require("pry")
-
-RSpec.configure do |config|
-  config.after(:each) do
-    DB.exec("DELETE FROM books *;")
-  end
-end
+require 'spec_helper'
 
 describe(Book) do
   describe("#==") do

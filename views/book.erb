@@ -4,4 +4,9 @@
   <h3><%= author.name %></h3>
 <% end %>
 
-<a href="/books">See all books</a>
+<form action="/books/<%= @book.id %>" method="post">
+  <input type="hidden" name="_method" value="delete">
+  <button type="submit" class="btn-danger">Delete this book</button>
+</form>
+
+<a href="/">Return to home page</a>

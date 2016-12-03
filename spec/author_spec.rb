@@ -1,16 +1,4 @@
-require("rspec")
-require("pg")
-require("author")
-require("book")
-require("pry")
-
-DB = PG.connect({:dbname => 'library_test'})
-
-RSpec.configure do |config|
-  config.after(:each) do
-    DB.exec("DELETE FROM authors *;")
-  end
-end
+require 'spec_helper'
 
 describe(Author) do
   describe("#==") do
@@ -99,4 +87,33 @@ describe(Author) do
     end
   end
 
+  describe("#duplicates") do
+    it("returns whether the author is a duplicate") do
+      author = Author.new({:name => 'Daniel Clowes', :id => nil})
+      author.save
+      author2 = Author.new({:name => 'Daniel Clowes', :id => nil})
+      author2.save
+      expect(author2.duplicates).to(eq([[author.name, author.id]]))
+    end
+  end
+
+  describe("#merge") do
+    it("merges two duplicate authors") do
+      author = Author.new({:name => 'Daniel Clowes', :id => nil})
+      author.save
+      book1 = Book.new({:title => 'Ghost World', :id => nil})
+      book1.save
+      author.update({:book_ids => [book1.id]})
+      author2 = Author.new({:name => 'Daniel Clowes', :id => nil})
+      author2.save
+      book2 = Book.new({:title => 'Patience', :id => nil})
+      book2.save
+      book3 = Book.new({:title => 'Like a Velvet Glove Cast in Iron', :id => nil})
+      book3.save
+      author2.update({:book_ids => [book2.id, book3.id]})
+      author.merge(author2)
+      expect(Author.all).to(eq([author]))
+      expect(author.books).to(eq([book1, book2, book3]))
+    end
+  end
 end

@@ -1,0 +1,23 @@
+<h1><%= @author.name %></h1>
+
+<% @author.books.each do |book| %>
+  <h3><%= book.title %></h3>
+<% end %>
+
+<form action="/authors/<%= @author.id %>" method="post">
+   <label for="title">Add another book for this author</label>
+   <input id="title" name="title" type="text">
+
+   <button type="submit">Submit</button>
+ </form>
+
+<form action="/authors/<%= @author.id %>" method="post">
+  <input name="_method" type="hidden" value="delete">
+  <button type="submit" class="btn-danger">Delete this author</button>
+</form>
+
+<form action="/authors/<%= @author.id %>/duplicates">
+  <button type="submit" class="btn-success">Find duplicates</button>
+</form>
+
+<a href="/">Return to home page</a>
