@@ -1,0 +1,9 @@
+<h3><%= @notification %></h3>
+<h3>User name: <%= @patron.name %></h3>
+<h4>Patron ID: <%= @patron.id %></h4>
+
+<h5>Checkout history</h5>
+
+<% @patron.checked_out.each do |book| %>
+  <p>Book title: <%= book.title %> | Due on <%= Time.parse(book.due_date).strftime("%m/%d/%Y") %>
+<% end %>

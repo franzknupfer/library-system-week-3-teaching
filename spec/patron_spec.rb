@@ -102,5 +102,4 @@ describe(Patron) do
       expect(patron.book_history).to(eq([book1, book2]))
     end
   end
-
 end

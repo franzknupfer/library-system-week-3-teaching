@@ -1,0 +1,15 @@
+<h3>All patrons</h3>
+
+<% @patrons.each do |patron| %>
+  <h5>Patron name: <%= patron.name %> | Patron ID: <%= patron.id %> </h5>
+  <% if patron.checked_out.length != 0 %>
+    <p>Checked out:
+      <% patron.checked_out.each do |book| %>
+        <%= book.title %> | <%= book.due_date %>
+      <% end %>
+    </p>
+    </ul>
+  <% else %>
+    <p>This patron has no current checkouts.</p>
+  <% end %>
+<% end %>

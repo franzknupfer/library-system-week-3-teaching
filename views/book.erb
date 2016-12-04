@@ -4,6 +4,24 @@
   <h3><%= author.name %></h3>
 <% end %>
 
+<% if @book.due_date != nil %>
+
+  <h5>This book is currently checked out.</h5>
+  <h5>Due date: <%= @book.due_date %></h5>
+
+<% else %>
+
+  <h5>This book is available to check out.</h5>
+  <form action="/checkout" method="post">
+    <input type="hidden" name="book_id" value="<%= @book.id %>">
+    <label for="patron_id">Type in your patron ID to check out this book.</label>
+    <input id="patron_id" name="patron_id" type="text">
+
+    <button type="submit">Submit</button>
+  </form>
+
+<% end %>
+
 <form action="/books/<%= @book.id %>" method="post">
   <input type="hidden" name="_method" value="delete">
   <button type="submit" class="btn-danger">Delete this book</button>

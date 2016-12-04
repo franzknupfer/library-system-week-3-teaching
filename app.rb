@@ -34,6 +34,40 @@ get('/librarian') do
   erb(:librarian)
 end
 
+get('/login') do
+  erb(:login)
+end
+
+get('/patron_dashboard') do
+  @patron = Patron.find(params[:patron_id].to_i)
+  if @patron
+    erb(:patron_dashboard)
+  else
+    @notification = "You haven't signed up for an account yet."
+    erb(:login)
+  end
+end
+
+get('/patrons') do
+  @patrons = Patron.all
+  erb(:patrons)
+end
+
+post('/patron_dashboard') do
+  name = params[:name]
+  @patron = Patron.new(:name => name, :id => nil)
+  @patron.save
+  @notification = "Thanks for signing up! Don't lose your Patron ID. You'll need it to sign in."
+  erb(:patron_dashboard)
+end
+
+post("/checkout") do
+  @book = Book.find(params[:book_id].to_i)
+  @patron = Patron.find(params[:patron_id].to_i)
+  @patron.checkout(@book)
+  erb(:patron_dashboard)
+end
+
 post("/clear") do
   Author.clear
   Book.clear
@@ -68,12 +102,11 @@ post('/authors/:id/duplicates') do
 end
 
 post('/authors/:id') do
-  @author = Author.find(params.fetch("id").to_i)
-  title = params.fetch("title")
+  @author = Author.find(params[:id].to_i)
+  title = params[:title]
   book = Book.new({ :title => title, :id => nil, :due_date => nil, :patron_id => nil })
   book.save
-  binding.pry
-  @author.update({:book_ids => [book.id]})
+  @author.update({:book_ids => [ book.id ]})
   erb(:author)
 end
 

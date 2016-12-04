@@ -1,0 +1,22 @@
+<%= @notification %>
+
+<h3>Sign in</h3>
+
+<form action="/patron_dashboard">
+  <label for="name">Name</label>
+  <input id="name" name="name" type="text">
+
+  <label for="patron_id">Unique ID</label>
+  <input id="patron_id" name="patron_id" type="number">
+
+  <button type="submit">Submit</button>
+</form>
+
+<h3>Not a member yet? Sign up here.</h3>
+
+<form action="/patron_dashboard" method="post">
+  <label for="name">Name</label>
+  <input id="name" name="name" type="text">
+
+  <button type="submit">Submit</button>
+</form>
