@@ -57,7 +57,9 @@ class Author
       book_id = result.fetch("book_id").to_i
       book = DB.exec("SELECT * FROM books WHERE id = #{book_id};")
       title = book.first.fetch("title")
-      book_authors.push(Book.new(:title => title, :id => book_id))
+      due_date = book.first.fetch("due_date")
+      patron_id = book.first.fetch("patron_id").to_i
+      book_authors.push(Book.new(:title => title, :id => book_id, :due_date => nil, :patron_id => patron_id))
     end
     book_authors
   end

@@ -19,7 +19,7 @@ class Patron
     results.each do |result|
       name = result.fetch("name")
       id = result.fetch("id").to_i
-      patrons.push(Patron.new(:name => name, :id => id))
+      patrons.push(Patron.new(:name => name, :id => id, :book_history => nil))
     end
     patrons
   end
@@ -51,19 +51,36 @@ class Patron
 
   def checkout(book)
     due_date = (DateTime.now + 14).to_time
-    DB.exec("INSERT INTO checkouts (due_date, patron_id, book_id) VALUES ('#{due_date}', #{self.id}, #{book.id});")
+    DB.exec("UPDATE books SET due_date = '#{due_date}' WHERE id = #{book.id};")
+    DB.exec("UPDATE books SET patron_id = #{self.id} WHERE id = #{book.id};")
+    DB.exec("INSERT INTO checkouts (patron_id, book_id, due_date) VALUES (#{self.id}, #{book.id}, '#{due_date}');")
   end
 
   def checked_out
     checked_out_books = []
-    results = DB.exec("SELECT book_id, due_date FROM checkouts WHERE patron_id = #{self.id};")
+    patron_id = self.id
+    results = DB.exec("SELECT * FROM books WHERE patron_id = #{patron_id};")
     results.each do |result|
-      book_id = result.fetch("book_id").to_i
-      due_date = Time.parse(result.fetch("due_date")).strftime("%m/%d/%Y")
-      book = DB.exec("SELECT * FROM books WHERE id = #{book_id};")
-      checked_out_books.push([book, due_date])
+      due_date = result.fetch("due_date")
+      title = result.fetch("title")
+      id = result.fetch("id").to_i
+      checked_out_books.push(Book.new(:title => title, :due_date => due_date, :id => id, :patron_id => patron_id))
     end
     checked_out_books
+  end
+
+  def book_history
+    book_history = []
+    patron_id = self.id
+    results = DB.exec("SELECT * FROM checkouts WHERE patron_id = #{patron_id};")
+    results.each do |result|
+      due_date = result.fetch("due_date")
+      book_id = result.fetch("book_id").to_i
+      book = DB.exec("SELECT title FROM books WHERE id = #{book_id}")
+      title = book.first.fetch("title")
+      book_history.push(Book.new({:title => title, :due_date => due_date, :id => book_id, :patron_id => patron_id}))
+    end
+    book_history
   end
 
 end

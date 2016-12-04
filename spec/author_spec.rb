@@ -65,9 +65,9 @@ describe(Author) do
     it("lets you add a book to an author") do
       author = Author.new({:name => 'Daniel Clowes', :id => nil})
       author.save
-      book1 = Book.new({:title => 'Ghost World', :id => nil})
+      book1 = Book.new({:title => 'Ghost World', :id => nil, :due_date => nil, :patron_id => nil})
       book1.save
-      book2 = Book.new({:title => 'Patience', :id => nil})
+      book2 = Book.new({:title => 'Patience', :id => nil, :due_date => nil, :patron_id => nil})
       book2.save
       author.update({:book_ids => [book1.id, book2.id]})
       expect(author.books).to(eq([book1, book2]))
@@ -78,9 +78,9 @@ describe(Author) do
     it("lists all books of a author") do
       author = Author.new({:name => 'Daniel Clowes', :id => nil})
       author.save
-      book1 = Book.new({:title => 'Ghost World', :id => nil})
+      book1 = Book.new({:title => 'Ghost World', :id => nil, :due_date => nil, :patron_id => nil})
       book1.save
-      book2 = Book.new({:title => 'Patience', :id => nil})
+      book2 = Book.new({:title => 'Patience', :id => nil, :due_date => nil, :patron_id => nil})
       book2.save
       author.update({:book_ids => [book1.id, book2.id]})
       expect(author.books).to(eq([book1, book2]))
@@ -101,14 +101,14 @@ describe(Author) do
     it("merges two duplicate authors") do
       author = Author.new({:name => 'Daniel Clowes', :id => nil})
       author.save
-      book1 = Book.new({:title => 'Ghost World', :id => nil})
+      book1 = Book.new({:title => 'Ghost World', :id => nil, :due_date => nil, :patron_id => nil})
       book1.save
       author.update({:book_ids => [book1.id]})
       author2 = Author.new({:name => 'Daniel Clowes', :id => nil})
       author2.save
-      book2 = Book.new({:title => 'Patience', :id => nil})
+      book2 = Book.new({:title => 'Patience', :id => nil, :due_date => nil, :patron_id => nil})
       book2.save
-      book3 = Book.new({:title => 'Like a Velvet Glove Cast in Iron', :id => nil})
+      book3 = Book.new({:title => 'Like a Velvet Glove Cast in Iron', :id => nil, :due_date => nil, :patron_id => nil})
       book3.save
       author2.update({:book_ids => [book2.id, book3.id]})
       author.merge(author2)

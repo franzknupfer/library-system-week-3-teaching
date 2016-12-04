@@ -65,9 +65,9 @@ describe(Patron) do
     it("allows a patron to check out a book") do
       patron = Patron.new({:name => "Franz Knupfer", :id => nil})
       patron.save
-      book1 = Book.new({:title => "The Nix", :id => nil})
+      book1 = Book.new({:title => "The Nix", :id => nil, :due_date => nil, :patron_id => nil})
       book1.save
-      book2 = Book.new({:title => "Never Let Me Go", :id => nil})
+      book2 = Book.new({:title => "Never Let Me Go", :id => nil, :due_date => nil, :patron_id => nil})
       book2.save
       patron.checkout(book1)
       patron.checkout(book2)
@@ -79,13 +79,27 @@ describe(Patron) do
     it("shows all books a patron has checked out") do
       patron = Patron.new({:name => "Franz Knupfer", :id => nil})
       patron.save
-      book1 = Book.new({:title => "The Nix", :id => nil})
+      book1 = Book.new({:title => "The Nix", :id => nil, :due_date => nil, :patron_id => nil})
       book1.save
-      book2 = Book.new({:title => "Never Let Me Go", :id => nil})
+      book2 = Book.new({:title => "Never Let Me Go", :id => nil, :due_date => nil, :patron_id => nil})
       book2.save
       patron.checkout(book1)
       patron.checkout(book2)
       expect(patron.checked_out).to(eq([book1, book2]))
+    end
+  end
+
+  describe("#book_history") do
+    it("shows a patron's book history") do
+      patron = Patron.new({:name => "Franz Knupfer", :id => nil})
+      patron.save
+      book1 = Book.new({:title => "The Nix", :id => nil, :due_date => nil, :patron_id => nil})
+      book1.save
+      book2 = Book.new({:title => "Never Let Me Go", :id => nil, :due_date => nil, :patron_id => nil})
+      book2.save
+      patron.checkout(book1)
+      patron.checkout(book2)
+      expect(patron.book_history).to(eq([book1, book2]))
     end
   end
 

@@ -1,12 +1,13 @@
 require 'pry'
 
 class Book
-  attr_reader :title, :id, :due_date
+  attr_reader :title, :id, :due_date, :patron_id
 
   define_method(:initialize) do |attributes|
     @title = attributes.fetch(:title)
     @id = attributes.fetch(:id)
-    # @due_date = attributes.fetch(:due_date)
+    @due_date = attributes.fetch(:due_date)
+    @patron_id = attributes.fetch(:patron_id)
   end
 
   define_singleton_method(:all) do
@@ -15,7 +16,9 @@ class Book
     all_books.each do |book|
       title = book.fetch("title")
       id = book.fetch("id").to_i
-      books.push(Book.new({:title => title, :id => id}))
+      due_date = book.fetch("due_date")
+      patron_id = book.fetch("patron_id")
+      books.push(Book.new({:title => title, :id => id, :due_date => due_date, :patron_id => patron_id}))
     end
     books
   end

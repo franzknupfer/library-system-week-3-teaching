@@ -18,17 +18,18 @@
   <% end %>
 </div>
 
-<form action="/" method="post">
-   <label for="title">Add a title</label>
-   <input id="title" name="title" type="text">
+<% if @user == "librarian" %>
+  <form action="/" method="post">
+    <label for="title">Add a title</label>
+    <input id="title" name="title" type="text">
 
-   <label for="name">Who is the author?</label>
-   <input id="name" name="name" type="text">
+    <label for="name">Who is the author?</label>
+    <input id="name" name="name" type="text">
 
-   <button type="submit">Submit</button>
- </form>
+    <button type="submit">Submit</button>
+  </form>
 
- <form action="/clear" method="post">
-
+  <form action="/clear" method="post">
     <button type="submit" class="btn-danger">Delete all</button>
   </form>
+<% end %>
